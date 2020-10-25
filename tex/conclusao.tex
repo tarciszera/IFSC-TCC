@@ -1,0 +1,13 @@
+\chapter{Conclusão}
+
+Foi desenvolvido um equipamento capaz de gerar um campo homogêneo e uniforme em uma determinada região para análise de sensores magnéticos. O campo é gerado com o emprego de três bobinas de Helmholtz, dispostas nos eixos x, y e z.
+
+O projeto das bobinas foi realizado com uma biblioteca de cálculo de campo em python \cite{magpy2020}, a qual utiliza soluções analíticas para o cálculo do campo gerado pelas bobinas de Helmholtz, possibilitando um projeto para qualquer requisito de bobina. Uma vez projetadas as bobinas, uma estrutura mecânica foi desenvolvida e impressa atendendo os requisitos de precisão necessários.
+
+O sistema eletrônico desenvolvido utiliza um padrão simples de comunicação com um computador, tornando o controle das bobinas e aquisição de dados independente de um software específico ou sistema operacional.
+
+A integração do sistema é feita por módulos independentes, tanto eletrônicos como mecânicos, o que permite a reutilização de partes do sistema e facilita a manutenção.
+
+Todos os requisitos de projeto, colocados nos objetivos deste trabalho, foram alcançados, estando o sistema em uso na Silicon Austria Labs, onde foi desenvolvido.
+
+Como sugestão de trabalho futuro poderia ser desenvolvido o controle de campos dinâmicos, o que levaria em conta a indutância e os tempos de escrita e leitura desses campos, possibilitando a geração de sinais magnéticos no centro do equipamento, aumentando suas aplicações.  Outra sugestão é o desenvolvimento de uma interface gráfica mais intuitiva e amigável para uso no computador, facilitando o uso do equipamento.

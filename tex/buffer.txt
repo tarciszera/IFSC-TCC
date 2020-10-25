@@ -1,0 +1,251 @@
+
+Resultados práticos
+Para validar a calculadora python, algumas medidas foram feitas, como a resistência, indutância e campo gerado para cada bobina. Cada bobina é nomeada agora por bobina interna, média e externa. As medidas são discutidas posteriormente.
+
+Bobina interna
+Esta bobina é a mais interior (interior), tem o campo mais intenso das 3 bobinas, por isso é a bobina interior e a que tem mais enrolamentos.
+
+Características teóricas da bobina:
+
+*tabela
+
+Resistência medida ($\Omega$), indutância (mH):
+
+*imagens
+
+O campo medido com os 500 mA (fonte de alimentação e imagem do sensor):
+
+*imagens
+
+** repete pros 3 coils
+
+Análise de dados
+Nas imagens anteriores pode-se ver a corrente para excitar as bobinas e o campo magnético lido do sensor em $\mu$T (O sensor será explicado no próximo tópico), o campo magnético já é uma média de 30 medições. O sensor não pode ser posicionado perfeitamente alinhado com as direções das bobinas, então a norma da diferença deve ser tomada para expressar o valor real do campo gerado pelas bobinas.
+
+Um roteiro de pitão (Coil Features) foi feito para lidar com esses cálculos simples e os resultados são mostrados na imagem seguinte.
+
+*imagens
+
+Como visto, o erro de campo é realmente minúsculo (abaixo de 2\%), talvez porque os enrolamentos, de alguma forma, não são perfeitamente redondos e pode ser refletido neste minúsculo erro.
+
+Na resistência o erro foi bastante grande, mas para uma estimativa poderia ser útil ter alguma noção de dissipação de energia.
+
+Sensor magnético
+O sensor magnético é uma parte realmente importante do projeto, porque ele fornecerá as medidas para entender se as bobinas estão funcionando corretamente ou não e fecha algum laço para ajustar o campo, se necessário. Algumas pesquisas foram feitas e alguns sensores foram testados. A primeira solução contada foi o sensor LIS3MDL, é para aplicação em bússola e tinha uma boa faixa de medição para a aplicação, mas com alguns testes ele mostrou uma resposta realmente ruim para compensar erros, então outra foi tentada, uma versão atualizada deste sensor da mesma empresa (ST), LSM303D, mas de alguma forma houve os mesmos problemas. Em seguida, pesquisou-se outra empresa especializada em sensores magnéticos e, em seguida, encontrou o MEMSIC, e procurando por sensores magnéticos, encontrou um que se encaixava na aplicação, o MMC3416.
+
+O sensor tem interface I²C, também tem um procedimento de medição realmente interessante, onde a operação de set/reset pode ser aplicada para extrair uma melhor medição, o lado negativo deste procedimento é que ele leva tempo. Neste projeto não é um problema, pois a aplicação é estática.
+
+
+Uma coisa útil a fazer é comprar a placa de avaliação neste caso, que tem tudo em hardware configurado para apenas usar o sensor. Para projetar, encomendar e soldar a placa de circuito impresso leva tempo, então para desenvolvê-la mais rapidamente foi usada a placa de avaliação MMC3416.
+
+\begin{figure}[h]
+    \centering
+     \caption{Modelagem das bobinas}
+     \includegraphics[width=1\textwidth]{./img/imagensExplicacoes/coil cross cut.png}
+     
+     \label{fig:diag}
+\end{figure}
+
+Controlador
+A parte do controlador do diagrama de blocos pode ser qualquer coisa que possa:
+
+Controlar o campo das bobinas
+Ler as medições do sensor
+Interpretar os comandos do usuário
+Para essas tarefas era necessário algo mais específico que pudesse ter algum:
+
+Comunicação I²C (sensor)
+Fonte atual ajustável com uma boa resolução, para alcançar a resolução de campo abaixo de 1 uT
+Uma forma de alterar a polaridade actual das bobinas
+Tipo de comunicação USB para estabelecer a comunicação com o computador (onde a interface do usuário seria implementada)
+É difícil ter todas essas tarefas já integradas, por isso foi feita alguma pesquisa sobre o que usar.
+
+Fornecimento de energia
+De uma forma ou de outra, uma fonte de alimentação deve ser utilizada para fornecer a energia para as bobinas, pode ser como uma fonte de tensão ou uma fonte de corrente. Operar no modo fonte de tensão implicaria algum controlador externo para ajustar a corrente correta para as bobinas, de outra forma com o modo fonte de corrente, a fonte de alimentação deve ter algum tipo de controle eletrônico de corrente integrado para usar isto no sistema. Após algumas pesquisas, foi encontrado o Rigol série DP800, especificamente o modelo 831A, que possui resolução de 0,1 mA de controle de corrente com 3 canais e pode ser controlado por software, perfeito para esta aplicação.
+
+O controle do software pode ser feito através do visto python que são algumas bibliotecas especiais usadas para controlar os equipamentos de medição.
+
+
+
+
+
+MCU
+Para controlar as pontes H e o sensor, pode ser usado um microcontrolador. O microcontrolador deve ter:
+
+Interface I²C periférica
+Pelo menos 6 pinos digitais livres (pontes H)
+USB de comunicação periférica
+E para isso o STM32L4 foi escolhido devido à versatilidade, processamento poderoso, fácil utilização e baixo custo, e tem todas as características necessárias para o sistema.
+
+Para programar este controlador foi utilizado o [stm32CUBE] para gerar o código base e o [atolic] para editar, compilar, depurar e programar o código.
+
+O código principal desenvolvido para o microcontrolador está nesses arquivos:
+
+main.c
+main.h
+lib_aux.c
+lib_aux.h
+MCC3416_def.h
+Para ter mais robustez o sistema foi desenvolvido em forma [máquina de estado finito], com um estado para cada operação.
+
+Quando o microcontrolador inicia, a primeira coisa que ele faz é pedir através da comunicação USB, o tamanho da média para cada medição e o tempo (ms) para fazê-lo, é claro que quanto maior o número de medições, maior será a sobrecarga.
+
+Após as 2 respostas, o sistema começa a operar na máquina de estado onde existem 9 estados possíveis além do Iddle:
+
+*tabela
+
+
+
+Os estados 'I', 'i', 'E' e 'e' controlam apenas o pino digital para a ponte H DRV8838DSGR, os estados 'M' e 'm' controlam 4 pinos digitais para controlar a ponte H formada pelos relés CPC1002N.
+
+Após um envio de estado, a resposta do sistema com um ''estado'' feito! para o controle de depuração e fluxo. A exceção a isto são os estados 'D' e 'C' que respondem com os dados diretamente.
+
+A comunicação USB é baseada em UART, a taxa de bauds da comunicação é de 256000 bauds.
+
+Novo diagrama de blocos do sistema
+Com a definição de como o controle será feito e com o quê, o diagrama de blocos pode ser redesenhado na imagem seguinte:
+
+
+
+Integração
+Com uma pesquisa sobre como integrar a aplicação VISA e os dados USB do microcontrolador, a conclusão foi usar bibliotecas python para obter as informações do USB e para controlar a fonte de alimentação, usando uma estrutura de diferentes scripts para fazer algum procedimento com isso.
+
+As principais bibliotecas python utilizadas para comunicação USB:
+
+pyvisa
+pyserial
+para algum processamento de dados e para mostrar gráficos:
+
+numpy
+matplotlib
+e usou algumas bibliotecas padrão como:
+
+tempo
+csv
+re
+Os scripts existentes até agora:
+
+auxLib.py
+system_current_finder.py
+system_measurement_procedure.py
+system_realtime_field_adjusting.py
+spinning_Compass.py
+sistema_plot.py
+auxLib é a biblioteca com as funções Black Magic que fazem todo o trabalho sobre os outros scripts.
+
+system_current_finder.py e system_measurement_procedure.py
+Ele calcula a corrente necessária para ter um intervalo de campos de 'lowerFieldLimit' a 'upperFieldLimit', com um passo de 'fieldResolution'. Executando o script finder atual do sistema, obtém-se um arquivo csv que contém as informações para aplicá-lo posteriormente com o arquivo de procedimento de medição do sistema.
+
+Algo importante a ter cuidado é que para calcular as correntes, a bobina não deve se mover e não deve ter nenhum objeto magnético próximo a isso, então no procedimento de medição, sem mover a bobina, basta colocar a amostra dentro e aplicar os campos.
+
+As correntes calculadas serão aplicadas uma de cada vez, digitando 'Enter' para ir para a próxima corrente calculada.
+
+system_plot.py
+Pega o arquivo csv gerado por system_current_finder.py e transforma a informação do texto em gráficos.
+
+system_realtime_field_adjusting.py
+Define algum campo no código de entrada, campo de 3 eixos, e depois executa o código. Continuará tentando ajustar o campo das bobinas para chegar ao campo desejado dentro da região principal em loop fechado.
+
+Validação do sistema
+Depois de testar todo o hardware, os scripts foram desenvolvidos
+
+Seguindo o gráfico gerado por system_plot.py a partir de um campo x,y rotativo encontrado por system_current_finder.py, por exemplo:
+
+
+PCBs
+Com o hardware validado, o próximo passo seria fazer um PCB para ter um sistema mais confiável e menos ruidoso. Os PCB's foram encomendados à Eurocircuits Gmbh utilizando os ficheiros PCB eagle.
+
+PCB do sensor
+Para tornar as coisas mais rápidas, foi feita uma placa de circuito impresso para o sensor, mas não para anexar o sensor a ele, pois é difícil solda-lo à mão, ao invés disso, ele foi projetado para anexar a placa de avaliação a ele usando um conector SMD que clica o cabo na placa de circuito impresso, reduzindo os problemas de ruído na comunicação I²C.
+
+O esquema e layout:
+
+As partes principais do sistema:
+
+Bobinas de Helmholtz para gerar o campo
+Controlador para controlar o campo gerado através de leituras de sensores magnéticos e alimentação de corrente para as bobinas
+Interface para dar corretamente os comandos do usuário para o 
+
+
+
+\pagebreak
+%% Codigo
+\inputminted[
+frame=lines,
+framesep=1mm,
+baselinestretch=0.5,
+fontsize=\footnotesize,
+linenos
+]{python}{codigos/xablau.py}
+
+
+
+PCB's - Eurocircuits Gmbh (191,81 eu)
+Power Supply
+DP-831A [1] - Power Supply
+PowerSupply Datasheet
+PowerSupply Programming Guide
+RIGOL support
+Insulated Copper Wire
+AWG 23 [1] - Wire Standard
+AWG23 doc
+AWG 22 [1] - Will not use this one
+Microcontroler
+STM32L432KCU6 [2] - Microcontroller ARM m4
+STM32L4 datasheet
+STM32L4 doc
+Magnetic Sensors-
+MMC3416 [5] - Magnetic Sensor $\pm$16 G
+
+evalMMC3416 [2] - Magnetic sensor (Will use this one)
+
+MMC3416 datasheet
+evalLIS3MDL [2] - Magnetic sensor
+
+LIS3MDL datasheet
+LIS3MDL app note
+evalLSM303D [2] - Magnetic sensor
+
+pythonLSM303D [1] - Magnetic sensor
+
+LSM303D datasheet
+Voltage buffer with current driver
+evalLT3080 [3] - Current source 0 to 1.1 A TO220
+LT3080 datasheet
+DAC
+evalDAC80004 [2] - DAC 16 bits with 4 channels
+DAC80004 datasheet
+H Bridge
+DRV8838DSGR [10] - full bridge 0 to 11V
+
+evalDRV8838DSGR [3] - full bridge 0 to 11V
+
+DRV8838DSGR datasheet
+evalDRV8838DSGR userguide
+CPC1002N (SMD) [20] - Solid state relay - 700 mA, 550 m$\Omega$
+
+CPC1002N datasheet
+Conectors and wires
+Board connector 5 pins [20] - Board male connector for wires with locking mechanism
+
+Wire connector 5 pins [20] - Wire female connector for the wires
+
+Board connector 6 pins [10] - Board male connector for wires with locking mechanism
+
+Wire connector 6 pins [20] - Wire female connector for the wires
+
+Wire crimped [50] - Jumper wires with the crimps already
+
+DF13 series documentation
+MCU header female 15 pins [10] - it's the headers to connect the MCU board to the main board
+
+Other material
+Resistor [10] - 6 $\Omega$ resistor 1% 10W
+Resistor datasheet
+micro USB cabe Molex [1] - Micro USB cable
+micro USB cabe GC [1] - Micro USB cable (better)
+Solderless Protoboard 1 [2] - Protoboard PTH
+* [Quantity]
+* Try to buy everything on digikey and RS-components
+
+Cost: Cost sheet Spread Sheet

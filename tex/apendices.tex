@@ -1,0 +1,120 @@
+\chapter{Código do cálculo da matrix de rotação}
+
+\begin{minted}[
+frame=lines,
+framesep=1mm,
+baselinestretch=0.5,
+fontsize=\footnotesize,
+linenos
+]{python}
+
+def rotationMatrixCalculator(visaObj, serialObj, teorethicalValue):
+    
+    # Rotation matrix, to align the measurements with the Coils axis
+    fData = getMeasurement(serialObj)    
+    # print(fData)
+    
+    # buffer to do the rotation matrix measurements
+    bufferData = np.zeros((4,3))
+    
+    # Assuming that the measurement is precise enough
+    bufferData[0,0] = fData[0]
+    bufferData[0,1] = fData[1]
+    bufferData[0,2] = fData[2]
+    
+    # Setting the voltage for the power supply
+    setPowerSupplyAllChVoltage(visaObj, 4)
+    
+    # Current used in the coils to make the relationship between current and field measured
+    baseCurrent = 400 #mA
+    
+    # Code to get the measurement information for the rotation matrix
+    for i in range(3,0,-1):
+        
+        setPowerSupplyChCurrent(visaObj, i, baseCurrent/1000)
+        sleep(0.1)
+        
+        fData = getMeasurement(serialObj)
+        
+        setPowerSupplyChCurrent(visaObj, i, 0)
+        sleep(0.1)    
+        
+        bufferData[i,0] = fData[0] - bufferData[0,0]
+        bufferData[i,1] = fData[1] - bufferData[0,1]
+        bufferData[i,2] = fData[2] - bufferData[0,2]
+        
+    # Doing a linear relationship between the Current set in the coil and the Field measured with this 
+    ch1Field = np.linalg.norm(bufferData[1,:])
+    ch1Current = baseCurrent
+    
+    ch2Field = np.linalg.norm(bufferData[2,:])
+    ch2Current = baseCurrent
+    
+    ch3Field = np.linalg.norm(bufferData[3,:])
+    ch3Current = baseCurrent
+    
+    
+    CurrentToField = np.zeros((3,1))
+    FieldToCurrent = np.zeros((3,1))
+    
+    # Linear coeficients to converto from uT to mA and vice-versa
+    CurrentToField[0] = ch1Field/ch1Current
+    FieldToCurrent[0] = 1/CurrentToField[0]
+    
+    CurrentToField[1] = ch2Field/ch2Current
+    FieldToCurrent[1] = 1/CurrentToField[1]
+    
+    CurrentToField[2] = ch3Field/ch3Current
+    FieldToCurrent[2] = 1/CurrentToField[2]
+    
+    relationshipError = np.zeros((3,1))
+    
+    relationshipError[0] = np.linalg.norm(CurrentToField[0] - teorethicalValue[0])/teorethicalValue[0]*100
+    relationshipError[1] = np.linalg.norm(CurrentToField[1] - teorethicalValue[1])/teorethicalValue[1]*100
+    relationshipError[2] = np.linalg.norm(CurrentToField[2] - teorethicalValue[2])/teorethicalValue[2]*100
+    
+    #print("field/current ration error (%) for each coil")
+    #print(relationshipError)
+    
+    # Those are the equations used to find the coeficients for the rotation matrix
+    '''
+    Ix0 = Cx1*xM0 + Cx2*yM0 + Cx3*zM0
+    Ix1 = Cx1*xM1 + Cx2*yM1 + Cx3*zM1
+    Ix2 = Cx1*xM2 + Cx2*yM2 + Cx3*zM2
+    
+    Iy0 = Cy1*xM0 + Cy2*yM0 + Cy3*zM0
+    Iy1 = Cy1*xM1 + Cy2*yM1 + Cy3*zM1
+    Iy2 = Cy1*xM2 + Cy2*yM2 + Cy3*zM2
+    
+    Iz0 = Cz1*xM0 + Cz2*yM0 + Cz3*zM0
+    Iz1 = Cz1*xM1 + Cz2*yM1 + Cz3*zM1
+    Iz2 = Cz1*xM2 + Cz2*yM2 + Cz3*zM2
+    '''
+    
+    # The code to arrange the equations to get the rotation coeficients
+    I1 = np.array([baseCurrent,0,0])
+    I2 = np.array([0,baseCurrent,0])
+    I3 = np.array([0,0,baseCurrent])
+    M = np.zeros((3,3))
+    
+    for i in range(1,4):
+        for j in range(0,3):
+            M[i-1,j] = bufferData[i,j]
+    
+    # Solving the 3x3 systems
+    C1 = np.linalg.solve(M,I1)*ch1Field/ch1Current
+    C2 = np.linalg.solve(M,I2)*ch2Field/ch2Current
+    C3 = np.linalg.solve(M,I3)*ch3Field/ch3Current
+    
+    # The rotation matrix 'C' that transform the uT measurement raw to the coils direction measurement in uT too
+    rotationMatrix = [C1, C2, C3]
+    
+    # Reseting the Power Supply
+    setPowerSupplyAllChCurrent(visaObj, 0)
+    setPowerSupplyAllChVoltage(visaObj, 4)
+    
+    sleep(0.1)
+    
+    return rotationMatrix
+    
+\end{minted}

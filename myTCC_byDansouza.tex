@@ -1,0 +1,421 @@
+\documentclass{ifscTCC} % Definicao do documentclass ifscTCC	
+
+% ----------------------------------------------------------
+% Informações de dados para CAPA e FOLHA DE ROSTO
+% ----------------------------------------------------------
+% Identificadores do trabalho - Usados para preencher os elementos pré-textuais
+\instituicao[o]{Instituto Federal de Educação, Ciência e Tecnologia de Santa Catarina} % Opcional
+\departamento[o]{Departamento Acadêmico de Eletrônica}
+\curso[o]{Curso Superior de Tecnologia em Eletrônica  Industrial}
+\documento[o]{TCC} % [o] para dissertação [a] para tese
+\preambulo{Trabalho de conclusão de curso submetido ao Instituto Federal de Educação, Ciência e Tecnologia de Santa Catarina como parte dos requisitos para obtenção do título de engenheiro eletrônico}
+\titulo{Projeto e Construção de um Gerador de Campo Magnético Uniforme Utilizando Bobinas de Helmholtz.}
+%\subtitulo{Subtítulo (se houver)} % Opcional
+\autor{Tarcis Aurélio Becher}
+\grau{Bacharelado}
+\local{Florianópolis} % Opcional (Florianópolis é o padrão)
+\data{2020}
+%\orientador[Orientador:\\]{Prof. Dr. Charles Borges de Lima}
+%\coorientador[Coorientador\\Universidade ...]{Prof. Dr.}
+%\coordenador[Coordenador\\Universidade ...]{Prof. Dr. }
+
+%---------------------------------------------------------------------
+% Início do documento
+%---------------------------------------------------------------------
+\begin{document}
+\newcommand{\numpy}{\textit{numpy}\xspace}
+\newcommand{\VCS}{\textit{VCS}\xspace}
+\newcommand{\Python}{\textit{Python 3}\xspace}
+\newcommand{\Git}{\textit{Git\xspace}}
+\newcommand{\GitHub}{\textit{GitHub\xspace}}
+\newcommand{\magpylib}{\textit{magpylib}\xspace}
+\newcommand{\Collections}{\textit{Collections}\xspace}
+\newcommand{\Collection}{\textit{Collection}\xspace}
+\newcommand{\software}{\textit{software}\xspace}
+\newcommand{\matplotlib}{\textit{matplotlib}\xspace}
+\newcommand{\ReadTheDocs}{\textit{ReadTheDocs}\xspace}
+\newcommand{\Sphinx}{\textit{Sphinx}\xspace}
+\newcommand{\PyPi}{\textit{PyPi}\xspace}
+\newcommand{\docstring}{\textit{docstring}\xspace}
+
+% Retira espaço extra obsoleto entre as frases.
+\frenchspacing 
+
+% ----------------------------------------------------------
+% CAPA SEGUINDO NORMA TCC IFSC
+% ----------------------------------------------------------
+%\imprimircapa  %Comando Padrão do Abntex2 (Formato Diferente do IFSC)
+\begin{capa}%
+    \begin{SingleSpacing}
+        \center\ABNTEXchapterfont\bfseries\ INSTITUTO FEDERAL DE EDUCAÇÃO, CIÊNCIA E TECNOLOGIA DE\\SANTA CATARINA - CÂMPUS FLORIANÓPOLIS\\DEPARTAMENTO ACADÊMICO DE ELETRÔNICA\\CURSO SUPERIOR DE ENGENHARIA ELETRÔNICA
+        
+        \vspace*{3.0cm}     % três espaços simples - conforme norma para TCC do IFSC
+        
+        \ABNTEXchapterfont\bfseries\MakeUppercase\imprimirautor
+
+        \begin{vplace}[0.5]
+            \begin{center}
+                \ABNTEXchapterfont\SingleSpacing\bfseries\Large\MakeUppercase\imprimirtitulo
+            \end{center}
+        \end{vplace}
+        
+        \begin{center}
+            \ABNTEXchapterfont\bfseries\ FLORIANÓPOLIS, 2020
+        \end{center}
+    \end{SingleSpacing}
+\end{capa}
+
+% ----------------------------------------------------------
+% FOLHA DE ROSTO SEGUINDO NORMA TCC IFSC
+% ----------------------------------------------------------
+% Comando Padrão do Abntex2 % (o * indica que haverá a ficha bibliográfica) (Formato Diferente do IFSC)
+% \imprimirfolhaderosto*
+% \imprimirfolhaderosto
+\begin{capa}%
+    \begin{SingleSpacing}
+        \center
+        \ABNTEXchapterfont\bfseries\ INSTITUTO FEDERAL DE EDUCAÇÃO, CIÊNCIA E TECNOLOGIA DE\\SANTA CATARINA - CÂMPUS FLORIANÓPOLIS\\DEPARTAMENTO ACADÊMICO DE ELETRÔNICA\\CURSO SUPERIOR DE ENGENHARIA ELETRÔNICA
+        
+        \vspace*{3.0cm}     % três espaços simples - conforme norma para TCC do IFSC
+        
+        \ABNTEXchapterfont\bfseries\MakeUppercase\imprimirautor
+        
+        %\begin{vplace}[0.5]
+        \vspace*{\fill} 
+            \begin{center}
+                \ABNTEXchapterfont\SingleSpacing\bfseries\Large\MakeUppercase\imprimirtitulo
+            \end{center}
+        \vspace*{\fill} 
+        %\end{vplace}
+        
+        \hspace{.45\textwidth}
+        \begin{minipage}{.5\textwidth}
+            \begin{SingleSpacing}
+                \normalfont\imprimirpreambulo
+                \vspace*{1.0cm}
+                
+                Orientador:\\Prof. Charles Borges de Lima, Dr. Eng.
+            \end{SingleSpacing}
+        \end{minipage}%
+        \vspace*{\fill} 
+        
+        \begin{center}
+            \ABNTEXchapterfont\bfseries\ FLORIANÓPOLIS, 2020
+        \end{center}
+    \end{SingleSpacing}
+\end{capa}
+
+% ----------------------------------------------------------
+% FICHA DE IDENTIFICAÇÃO (CATALOGRÁFICA) APROVAÇÃO SEGUINDO NORMA TCC IFSC
+% ----------------------------------------------------------
+%\includepdf{./pdf/fichacatalografica_final.pdf}     %Para Inclusão de modelo fornecido pela Biblioteca
+\cleardoublepage
+
+%\begin{fichacatalografica}
+%    \sffamily
+%    \vspace*{15cm}    % Posição vertical
+%    \hrule    % Linha horizontal
+%    
+%    \begin{center}
+%        % Minipage Centralizado
+%        \begin{minipage}[c]{12.5cm} % Largura
+%            \imprimirautor
+%            \hspace{0.5cm} \imprimirtitulo / \imprimirautor. --
+%            \imprimirlocal, \imprimirdata-
+%            \hspace{0.5cm} \pageref{LastPage} p. : il.(alguma color.); 30 cm.%\\
+%            \hspace{0.5cm} \imprimirorientadorRotulo \imprimirorientador\\
+%            \hspace{0.5cm}
+%            \parbox[t]{\textwidth}{\imprimirtipotrabalho~--~\imprimirinstituicao,
+%            \imprimirdata.}\\
+%            \hspace{0.5cm}
+%            1. Palavra-chave1.
+%            2. Palavra-chave2.
+%            I. Orientador.
+%            II. Universidade xxx.
+%            III. Faculdade de xxx.
+%            IV. Título\\
+%            \hspace{8.75cm} CDU 02:141:005.7\\
+%        \end{minipage}
+%    \end{center}
+%    \hrule
+%\end{fichacatalografica}
+
+% ----------------------------------------------------------
+% ERRATA SEGUINDO NORMA TCC IFSC (OPCIONAL)
+% ----------------------------------------------------------
+%\begin{errata}
+%    FERRIGNO, C. R. A. \textbf{Tratamento de neoplasias ósseas apendiculares com reimplantação de enxerto ósseo autólogo autoclavado associado ao plasma rico em plaquetas}: estudo crítico na cirurgia de preservação de membro em cães. 2011. 128 f. Tese (Livre-Docência) - Faculdade de Medicina
+%    Veterinária e Zootecnia, Universidade de São Paulo, São Paulo, 2011.
+%    \begin{table}[htb]
+%        \center
+%        \footnotesize
+%        \begin{tabular}{|p{1.4cm}|p{1cm}|p{3cm}|p{3cm}|}
+%            \hline
+%            \textbf{Folha} & \textbf{Linha} & \textbf{Onde se lê} &
+%            \textbf{Leia-se}\\
+%            \hline
+%            1 & 10 & auto-conclavo & autoconclavo\\
+%            \hline
+%        \end{tabular}
+%    \end{table}
+%\end{errata}
+%
+% ----------------------------------------------------------
+% FOLHA APROVAÇÃO SEGUINDO NORMA TCC IFSC
+% ----------------------------------------------------------
+%\includepdf{folhadeaprovacao_final.pdf}     %Após as assinaturas é incluido digitalizado
+
+\setcounter{page}{4}
+\begin{folhadeaprovacao}
+    \begin{center}
+        \begin{center}
+            \ABNTEXchapterfont\SingleSpacing\bfseries\Large\MakeUppercase\imprimirtitulo
+        \end{center}
+            
+        \vspace*{2.0cm}
+            
+        \ABNTEXchapterfont\normalsize\bfseries\MakeUppercase\imprimirautor
+            
+        \vspace*{1.0cm}
+    \end{center}
+    
+    
+    \noindent\OnehalfSpacing Este Trabalho foi julgado adequado para obtenção do Título de Engenheiro Eletrônico em Outubro de 2020 e aprovado na sua forma final pela banca examinadora do Curso de Engenharia Eletrônica do instituto Federal de Educação Ciência, e Tecnologia de Santa Catarina.
+        
+    \vspace*{1.0cm}
+    \begin{center}    
+        \imprimirlocal, 26 de Outubro de 2020.
+    \end{center}
+    
+    \noindent Banca Examinadora:
+    
+    \assinatura{Charles Borges de Lima, Dr. Eng.}
+    \assinatura{Golberi de Salvador Ferreira, Dr. Eng.}
+    \assinatura{Luis Martinhago Schlichting, Dr. Eng.}
+
+\end{folhadeaprovacao}
+\cleardoublepage
+
+% ----------------------------------------------------------
+% DEDICATORIA SEGUINDO NORMA TCC IFSC
+% ----------------------------------------------------------
+\begin{dedicatoria}
+
+    \vspace*{\fill}
+        Dedico este trabalho a minha Mãe, dona Jacira: Guerreira, correta e muito carinhosa, cuidou de mim e de minha irmã sozinha desde meus nove anos. Agradeço todos esses anos de luta, parceria e muito amor. Te amo muito Mãe e agradeço muito por poder te dizer isso todos os dias. Também dedico este trabalho ao meu Pai, seu Marco Aurélio: Muito carinhoso, trabalhador, querido por todos, sonhava em ver um dos seus filhos engenheiro. Isso antes que o câncer o levasse. Onde quer que estejas, eu te amo muito Pai.
+    \vspace*{\fill}
+    
+\end{dedicatoria}
+
+
+% ----------------------------------------------------------
+% AGRADECIMENTOS SEGUINDO NORMA TCC IFSC
+% ----------------------------------------------------------
+\begin{agradecimentos}[AGRADECIMENTOS]
+        Gostaria de agradecer primeiramente a minha família, mãe e irmã Jacira e Jéssica que sempre me deram apoio incondicional para que eu nunca desistisse de ser algo a mais. Gostaria de agradecer a minha companheira Isis, aos meus amigos de coração e a todos que de alguma forma participaram desse processo, seja com oportunidades únicas de aprendizado à um sorriso no rosto melhorando o dia-a-dia.
+        
+        Um agradecimento especial ao IFSC por proporcionar essa oportunidade de aprendizado contínuo com foco, persistência e sempre almejando uma sociedade melhor. Ao longo desses últimos 10 anos e com o trabalho de muita gente tornei-me finalmente técnico e engenheiro, e com meu trabalho poderei fazer da sociedade um lugar melhor.
+        
+        Outro agradecimento especial à Silicon Austria Labs por ter proporcionado essa oportunidade única de vida que foi fazer este projeto lá. Especialmente agradecido pelo carinho e cuidado que recebi de meus eternos amigos: Michael, Laura, Leonardo, Wolfgang, Aleš e Neža.
+
+\end{agradecimentos}
+
+
+% ----------------------------------------------------------
+% EPIGRAFE SEGUINDO NORMA TCC IFSC
+% ----------------------------------------------------------
+%\begin{epigrafe}
+%	
+%    \noindent\textit{‘‘Não vos amoldeis às estruturas deste mundo, \\
+%    mas transformai-vos pela renovação da mente, \\
+%    a fim de distinguir qual éa vontade de Deus: \\
+%    o que é bom, o que Lhe éagradável, o que éperfeito.\\
+%    (Bíblia Sagrada, Romanos 12, 2)}
+%    
+%\end{epigrafe}
+
+% ----------------------------------------------------------
+% RESUMO SEGUINDO NORMA TCC IFSC
+% ----------------------------------------------------------
+% resumo na língua vernácula (obrigatório)
+\setlength{\absparsep}{18pt} % ajusta o espaçamento dos parágrafos do resumo
+
+\begin{resumo}
+
+\noindent
+\textbf{Palavras-chaves}: bobina de Helmholtz, campo magnético, indução magnética, sensor magnético. 
+
+Na análise de transdutores é necessário um ambiente conhecido e controlado. No caso de transdutores magnéticos, esse ambiente é formado por um campo magnético conhecido, controlado e uniforme em toda a região de caracterização.
+
+Para tal, é necessário um equipamento capaz de anular quaisquer fontes de campo magnético externo e, ainda sim, gerar um campo controlado e conhecido para a caracterização do transdutor na região de análise.
+
+A bobina de Helmholtz é capaz de gerar no centro da sua estrutura uma indução magnética quase homogênea. Quanto maior a bobina e mais perto do centro da estrutura, maior a taxa de homogeneidade do campo produzido. Um conjunto de 3 bobinas em direções linearmente independentes é capaz de anular campos externos e também de gerar um campo homogêneo controlado por corrente.
+
+Este trabalho trata do desenvolvimento de um equipamento com 3 bobinas de Helmholtz, eletronicamente controladas e conectadas a um computador, possibilitando o tratamento dos dados e geração de campos magnéticos de forma fácil e automática.
+
+\end{resumo}
+
+% ----------------------------------------------------------
+% ABSTRACT SEGUINDO NORMA TCC IFSC
+% ----------------------------------------------------------
+\begin{resumo}[ABSTRACT]
+\begin{otherlanguage*}{english}
+
+
+
+\noindent
+\textbf{Key-Words}: Helmholtz coil, magnetic field, magnetic induction, magnetic sensor. 
+
+
+A known and controlled environment is required in the analysis of transducers. In the case of magnetic encoders, this environment is formed by a known, controlled and uniform magnetic field throughout the characterization region.
+
+This requires an equipment capable of cancelling any external magnetic field sources and still generate a controlled and known field for the characterization of the transducer in the analysis region.
+
+The Helmholtz coil is capable of generating in the center of its structure an almost homogeneous magnetic induction. The larger the coil and the closer to the center of the structure, the higher the homogeneity rate of the produced field. A set of 3 coils in linearly independent directions is able to annul external fields and also to generate a homogeneous field controlled by current.
+
+This work deals with the development of an equipment with 3 Helmholtz coils, electronically controlled and connected to a computer, enabling the treatment of data and generation of magnetic fields easily and automatically.
+
+\end{otherlanguage*}
+\end{resumo}
+
+% ----------------------------------------------------------
+% LISTA DE ILUSTRAÇÕES
+% ----------------------------------------------------------
+\pdfbookmark[0]{\listfigurename}{lof}
+\listoffigures*
+\cleardoublepage
+
+% ----------------------------------------------------------
+% LISTA DE TABELAS
+% ----------------------------------------------------------
+\pdfbookmark[0]{\listtablename}{lot}
+\listoftables*
+\cleardoublepage
+
+% ----------------------------------------------------------
+% LISTA DE ABREVIATURAS E SIGLAS
+% ----------------------------------------------------------
+\begin{siglas}
+   \item[IFSC] Instituto Federal de Educação Ciência e Tecnologia de Santa Catarina
+   \item[SAL] \textit{Silicon Austria Labs} 
+   \item[PCI] Placa de Circuito Impresso
+   \item[CI] Circuito Integrado
+   \item[MCU] Microcontrolador
+   \item[USB] \textit{Universal Serial Bus}
+   \item[RMS] \textit{Root Mean Square}
+   \item[I2C] \textit{Inter-Integrated Circuit}
+   \item[HAL] \textit{Hardware Abstraction Layer}
+   \item[VISA] \textit{Virtual Instrument Software Architecture}
+   \item[API] \textit{Application Programming Interface}
+   \item[SMD] \textit{Surface Mount Device}
+   \item[CC] Corrente contínua
+   \item[CA] Corrente alternada
+\end{siglas}
+
+% ----------------------------------------------------------
+% LISTA DE SIMBOLOS
+% ----------------------------------------------------------
+\begin{simbolos}
+   \item[$T$] Tesla - Unidade de indução magnética
+   \item[$mT$] Militesla - Unidade de indução magnética
+   \item[$\mu T$] Microtesla - Unidade de indução magnética
+   \item[$V$] Volts - Unidade de potencial elétrico
+   \item[$mV$] Milivolts - Unidade de potencial elétrico
+   \item[$A$] Ampere - Unidade de Corrente Elétrica
+   \item[$mA$] Miliampere - Unidade de Corrente Elétrica
+   \item[$\mu A$] Microampere - Unidade de Corrente Elétrica
+   \item[$\Omega$] Ohms - Unidade de resistência elétrica
+   \item[$H$] Henry - Unidade de indutância elétrica
+   \item[$mH$] Henry - Unidade de indutância elétrica
+   \item[$W$] Watts - Unidade de potência elétrica
+   \item[$mW$] Miliwatts - Unidade de potência elétrica
+   \item[$H_z$] Hertz - Unidade de Frequência 
+   \item[$mm$] Milimetros - Unidade de comprimento 
+   \item[$mm^{2}$] Milimetros Quadrados - Unidade de área
+   \item[$mm^{3}$] Milimetros Cúbicos - Unidade de volume
+\end{simbolos}
+
+% ----------------------------------------------------------
+% SUMÁRIO
+% ----------------------------------------------------------
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+
+% ----------------------------------------------------------
+% ELEMENTOS TEXTUAIS
+% ----------------------------------------------------------
+\textual
+
+% Cores para os códigos do MatLab
+\definecolor{mygreen}{RGB}{28,172,0}    % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}  % o lilas para códigos do MatLab
+
+\lstset{language=Matlab,            %Que tipo de linguaguem os códigos serão
+    %basicstyle=\color{red}, 		%normal fontsize
+    %basicstyle=\ttfamily\footnotesize 	%fontsize small
+    basicstyle=\ttfamily\scriptsize,		%fontsize verysmall
+    %breaklines=false,%
+    morekeywords={matlab2tikz},
+    keywordstyle=\color{blue},%
+    morekeywords=[2]{1}, keywordstyle=[2]{\color{black}},
+    identifierstyle=\color{black},%
+    stringstyle=\color{mylilas},
+    commentstyle=\color{mygreen},%
+    showstringspaces=false,%without this there will be a symbol in the places where there is a space
+    numbers=left,%
+    numberstyle={\tiny \color{black}},% size of the numbers
+    numbersep=5pt, % this defines how far the numbers are from the text
+    emph=[1]{for,end,break},emphstyle=[1]\color{red}, %some words to emphasise
+    %emph=[2]{word1,word2}, emphstyle=[2]{style},    
+}
+
+% Elimina o Cabeçalho
+\pagestyle{parpage}
+
+%\part{Introdução}
+\include{./tex/introducao}
+\include{./tex/revisao}
+\include{./tex/desenvolvimento}
+\include{./tex/resultados}
+\include{./tex/conclusao}
+
+% ----------------------------------------------------------
+% ELEMENTOS PÓS-TEXTUAIS 
+% ----------------------------------------------------------
+\postextual
+
+% ----------------------------------------------------------
+% REFERÊNCIAS BIBLIOGRÁFICAS
+% ----------------------------------------------------------
+\bibliography{./bib/bibTCC}
+
+% ----------------------------------------------------------
+% GLOSSARIO
+% ----------------------------------------------------------
+% Consulte o manual da classe abntex2 para orientações sobre o glossário.
+%\glossary
+
+% ----------------------------------------------------------
+% APÊNDICES
+% ----------------------------------------------------------
+%\begin{apendicesenv}
+\apendices
+\include{./tex/apendices}
+%\end{apendicesenv}
+
+% ----------------------------------------------------------
+% ANEXOS
+% ----------------------------------------------------------
+%\begin{anexosenv}[ANEXOS]
+%\anexos
+%\include{./tex/anexos}
+%\end{anexosenv}
+
+%-----------------------------------------------------------
+% INDICE REMISSIVO
+%-----------------------------------------------------------
+% \phantompart
+% \printindex
+
+\end{document}

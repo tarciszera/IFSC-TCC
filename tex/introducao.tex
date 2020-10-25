@@ -1,0 +1,34 @@
+\chapter{Introdução}
+
+Para o desenvolvimento de um transdutor é necessária sua caracterização, ou seja, dadas excitações de natureza especifica, verificar a reação do transdutor a essas excitações. Assim, deve-se ter um ambiente de testes que forneça algum tipo de excitação conhecida, permitindo medidas precisas.
+
+No caso de transdutores magnéticos, além da influência do meio (Permeabilidade magnética), há um campo terrestre que não é constante e que deve ser compensado.
+
+Na empresa Silicon Austria Labs (SAL), onde foi feito este projeto, foi desenvolvido um transdutor magnético. Este transdutor necessitava ser caracterizado e para isso um equipamento que gerasse um campo magnético homogêneo e estático deveria ser construído.
+
+Este trabalho descreve todo o projeto e construção deste equipamento que é baseado em bobinas de Helmholtz, uma bobina para cada direção do espaço (x, y, z), tendo como resultado uma bobina de Helmholtz 3D. O controle das bobinas e tratamento de dados também é desenvolvido nesse projeto.
+
+\section{Objetivos}
+
+\subsection{Objetivo geral}
+
+O objetivo do projeto é desenvolver um equipamento que possa gerar um campo magnético homogêneo capaz de compensar o campo magnético da terra, sendo empregado para análise de sensores magnéticos. 
+Os requisitos foram retirados da experiência do orientador do projeto com projetos anteriores de objetivo parecido. A seguir os requisitos para o campo magnético gerado pelas bobinas:    
+
+\begin{itemize}
+    \item Intensidade de indução magnética entre 1 $\mu$T e 1,25 mT em uma bobina principal, sendo as outras duas numa faixa de 1 $\mu$T e 0,25 mT
+    \item Passo de indução de 1 $\mu$T ou menos.
+    \item Diferença de intensidade de indução magnética de qualquer parte da região sob controle menor que 1\% da intensidade de campo no centro da região.
+    \item Diferença do ângulo entre os vetores da região e o vetor central menor que um grau.
+\end{itemize}
+
+Todos esses requisitos devem ser cumpridos numa região grande o suficiente para o transdutor inteiro a ser caracterizado. No caso deste projeto, é definida uma região de 20 mm³, que é maior do que o transdutor desenvolvido pela SAL. O campo deve manter-se constante do começo ao fim de cada medida realizada.
+
+\subsection{Objetivos específicos}
+
+\begin{itemize}
+    \item Projetar as bobinas de Helmholtz necessárias para gerar um campo tridimensional com o auxílio de um simulador.
+    \item Projetar o suporte das bobinas de Helmholtz e todas as estruturas mecânicas relacionadas com o posicionamento dos dispositivos no sistema.
+    \item Confeccionar as bobinas de Helmholtz e as peças do sistema.
+    \item Projetar um sistema para controlar o campo gerado pelas bobinas de Helmholtz.
+\end{itemize}
