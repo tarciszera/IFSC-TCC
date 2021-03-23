@@ -2,7 +2,7 @@
 
 O principal objetivo do projeto é o de controlar a indução magnética gerada em uma região especifica. A bobina de Helmholtz 3D é capaz de gerar um campo constante e homogêneo no centro de sua estrutura podendo ser controlada por corrente elétrica.
 
-O digrama mostrado na figura \ref{fig:diag2} representa um sistema que utiliza diversas ferramentas para gerar as correntes na bobina de Helmholtz 3D. Um MCU (microcontrolador) verifica o campo gerado pelas bobinas através de um sensor magnético posicionado no centro das estruturas. O MCU se comunica com um computador, recebendo comando de controle das Pontes H que controlam as polaridades das correntes nas bobinas e também enviando os valores de campos lidos pelo sensor.
+O digrama mostrado na figura \ref{fig:diag2} representa um sistema que utiliza diversas ferramentas para gerar as correntes na bobina de Helmholtz 3D. Um microcontrolador (MCU) verifica o campo gerado pelas bobinas através de um sensor magnético posicionado no centro das estruturas. O MCU se comunica com um computador, recebendo comando de controle das Pontes H que controlam as polaridades das correntes nas bobinas e também enviando os valores de campos lidos pelo sensor.
 
 \begin{figure}[H]
     \centering
@@ -16,7 +16,7 @@ O digrama mostrado na figura \ref{fig:diag2} representa um sistema que utiliza d
 
 \subsection{Fonte}
 
-A fonte RIGOL 831-A \cite{RG831A} foi escolhida para a alimentação das bobinas de helmholtz. Contém 3 canais, um para cada bobina de Helmholtz a ser controlada, com um canal (Canal 3) de tensão negativa e referencia compartilhada com outro canal (Canal 2). Segundo a folha de dados, a fonte tem resolução de corrente de 100 $\mu$A \cite{RG831A} e pode ser programada por VISA. Uma imagem ilustrativa pode ser vista na figura \ref{fig:font}.
+A fonte RIGOL 831-A \cite{RG831A} foi escolhida para a alimentação das bobinas de helmholtz. Contém 3 canais, um para cada bobina de Helmholtz a ser controlada, com o canal 3 de tensão negativa e referencia compartilhada com o canal 2. Segundo a folha de dados, a fonte tem resolução de corrente de 100 $\mu$A \cite{RG831A} e pode ser programada por VISA. Uma imagem ilustrativa pode ser vista na figura \ref{fig:font}.
 
 \begin{figure}[H]
     \centering
@@ -30,11 +30,11 @@ A fonte RIGOL 831-A \cite{RG831A} foi escolhida para a alimentação das bobinas
 
 Para este projeto foram necessárias 3 pontes H, uma para cada bobina Helmholtz que compõe a bobina de Helmholtz 3D. Ainda há a peculiaridade do canal com tensão negativa o qual a referencia está intrinsecamente conectada a outro canal positivo da fonte do projeto. Isso pode ocasionar um problema de detecção do sinal controle enviado pelo microcontrolador devido a referência da ponte H para o canal negativo estar conectada a uma tensão negativa e a do microcontrolador na referencia do circuito.
 
-Para os canais positivos o CI (Circuito integrado) selecionado foi o DRV8838DSGR \cite{drv8838}, esse é um CI  dedicado, que pode ser controlado com apenas 1 pino digital. A figura \ref{fig:pontHCI} ilustra um diagrama simplificado do DRV8838DSGR.
+Para os canais positivos o CI (Circuito integrado) selecionado foi o DRV8838 \cite{drv8838}, esse é um CI  dedicado, que pode ser controlado com apenas 1 pino digital. A figura \ref{fig:pontHCI} ilustra um diagrama simplificado do DRV8838.
 
 \begin{figure}[H]
     \centering
-     \caption{Diagrama simplificado DRV8838DSGR.}
+     \caption{Diagrama simplificado DRV8838.}
      \includegraphics[width=0.8\textwidth]{./img/imagensExplicacoes/ponteHCI.png}
      \caption*{Fonte: Folha de dados DRV8838DSGR.\cite{drv8838}}
      \label{fig:pontHCI}
@@ -45,7 +45,7 @@ Para garantir o funcionamento da ponte H no canal negativo optou-se por utilizar
 \begin{figure}[H]
     \centering
      \caption{Diagrama do CPC1002N.}
-     \includegraphics[width=0.65\textwidth]{./img/imagensExplicacoes/ponteHOpt.png}
+     \includegraphics[width=0.5\textwidth]{./img/imagensExplicacoes/ponteHOpt.png}
      \caption*{Fonte: Folha de dados CPC1002N.}
      \label{fig:pontHOpt}
 \end{figure}
@@ -55,7 +55,7 @@ No diagrama da figura \ref{fig:pontH} pode-se ver o esquemático da ponte H form
 \begin{figure}[H]
     \centering
      \caption{Ponte H isoladora.}
-     \includegraphics[width=0.6\textwidth]{./img/imagensExplicacoes/ponte_h_rele.png}
+     \includegraphics[width=0.75\textwidth]{./img/imagensExplicacoes/ponte_h_rele.png}
      \caption*{Fonte: Autor.}
      \label{fig:pontH}
 \end{figure}
@@ -66,7 +66,7 @@ A escolha dos componentes foi feita pela capacidade de corrente dos componentes 
 
 Era necessário que o microcontrolador tivesse um barramento I2C, 6 pinos de entrada/saída digital para o controle das pontes H e alguma forma de comunicação com o computador, sendo preferível a USB.
 
-Com base nos parametros supracitados, o microcontrolador escolhido para o projeto foi o STM32L432, que emprega a arquitetura ARM Cortex-M4, com ponto flutuante em hardware. Dessa forma, empregou-se o kit de desenvolvimento STM32L432KCU6. Na figura \ref{fig:diagArm} é apresentado um diagrama simplificado das funcionalidades do STM32L432, enquanto que o kit pode ser observado na figura \ref{fig:kitArm}.
+Com base nos parametros supracitados, o microcontrolador escolhido para o projeto foi o STM32L432, que emprega a arquitetura ARM Cortex-M4, com ponto flutuante em hardware. Dessa forma, empregou-se o kit de desenvolvimento STM32L432 KCU6. Na figura \ref{fig:diagArm} é apresentado um diagrama simplificado das funcionalidades do STM32L432 KCU6, enquanto que o kit pode ser observado na figura \ref{fig:kitArm}.
 
 \begin{figure}[H]
     \centering
@@ -301,7 +301,7 @@ Para notar a diferença de intensidade da indução magnética, basta observar o
 
 Na verificação dessa diferença de direção é necessária a análise do ângulo formado em cada ponto do vetor em relação a direção desejada. Ou seja, na bobina com direção desejada em z, é necessária a análise do ângulo formado nos planos zy e zx. Se os ângulos dos vetores em relação a direção z forem menores do que um grau nos dois planos, então o requisito de homogeneidade de direção é cumprido.
 
-Para a análise foram verificados nos gráficos os pontos de maiores amplitudes nos dois planos e na direção desejada. Nessa análise é realizado o cálculo da tangente do vetor utilizando o cateto oposto (Outras direções) e o cateto adjacente (Direção de interesse). O resultado do cálculo é comparado com a tangente de um grau. Se for menor, a bobina Helmholtz passa no teste e a região de interesse é considerada homogênea. Na equação \ref{eq:anghomo} é possível observar a relação entre a tangente de um grau e a tangente do vetor a ser analisado.
+Para a análise foram verificados nos gráficos os pontos de maiores amplitudes nos dois planos e na direção desejada. Nessa análise é realizado o cálculo da tangente do vetor utilizando o cateto oposto (outra direção) e o cateto adjacente (direção de interesse). O resultado do cálculo é comparado com a tangente de um grau. Se for menor, a bobina Helmholtz passa no teste e a região de interesse é considerada homogênea. Na equação \ref{eq:anghomo} é possível observar a relação entre a tangente de um grau e a tangente do vetor a ser analisado.
 
 \begin{equation}
     \hspace{2pt}\textrm{tg}(1º) = 0.01745 \geq \frac{vetor_{outraDirecao}}{vetor_{DirecaoDeInteresse}}

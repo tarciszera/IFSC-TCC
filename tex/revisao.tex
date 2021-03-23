@@ -7,9 +7,7 @@
 Magnetismo é o fenômeno onde um material ou objeto causa uma força,
 descrita como magnética, que repele ou atrai outros materiais e objetos susceptíveis. Este fenômeno é consequência de um movimento de cargas elétricas, algo que também surge em condutores elétricos de diversos tipos. Estas cargas em movimento são descritas em campos vetoriais, denominados campo magnético.\cite{callister2010}
 
-A intensidade do campo pode ser representado pela letra H, onde sua unidade representa a intensidade do campo magnético, em $\frac{A}{m}$.\cite{callister2010}
-
-A letra B representa a densidade de fluxo magnético, ou indução magnética, dado em T (Tesla). É uma relação do campo magnético com o meio. De forma simplificada na equação \ref{eq:bcalc} é apresentado o cálculo da indução magnética, onde µ representa a permeabilidade magnética do meio.\cite{callister2010}
+A relação entre o campo magnético e o meio é representada pela equação \ref{eq:bcalc}, onde a intensidade de campo magnético é dada por H, cuja unidade é A/m; μ representa a permeabilidade magnética do meio em Henrys/m e, B representa a densidade de fluxo magnético, ou indução magnética, dado em T (Tesla). \cite{callister2010}
 
 \begin{equation}
     B =\mu H
@@ -17,30 +15,28 @@ A letra B representa a densidade de fluxo magnético, ou indução magnética, d
 \end{equation}
 
 \section{Campo Magnético Uniforme}
-Campo Magnético é a região ao redor de um imã, na qual ocorre um efeito magnético. Esse efeito é percebido pela ação de uma Força Magnética de atração ou de repulsão. O campo magnético pode ser definido pela medida da força que o campo exerce sobre o movimento das partículas de carga, tal como um elétron.\cite{mussoi}
+Campo Magnético é a região ao redor de um imã, na qual ocorre um efeito magnético. Esse efeito é percebido pela ação de uma força magnética de atração ou de repulsão. O campo magnético pode ser definido pela medida da força que o campo exerce sobre o movimento das partículas de carga, tal como um elétron.\cite{mussoi2}
 
-A representação visual do Campo Magnético é feita através de Linhas de Campo Magnético,
-também conhecidas por Linhas de Indução Magnética ou ainda por Linhas de Fluxo Magnético, que são linhas envoltórias imaginárias. As linhas de campo magnético são linhas fechadas que saem do pólo norte e
-entram no pólo sul. \cite{mussoi}
+A representação visual do campo magnético é feita através de linhas de campo magnético, também conhecidas por linhas de indução magnética ou ainda por linhas de fluxo magnético, que são linhas envoltórias imaginárias. As linhas de campo magnético são linhas fechadas que saem do pólo norte e entram no pólo sul. \cite{mussoi2}
 
 No caso de um imã em forma de ferradura, as linhas de campo entre as superfícies paralelas
 dispõem-se praticamente paralelas, originando um campo magnético uniforme. No campo magnético
-uniforme, todas as linhas de campo têm a mesma direção e sentido em qualquer ponto. A figura \ref{fig:muss2} mostra essa situação. \cite{mussoi}
+uniforme, todas as linhas de campo têm a mesma direção e sentido em qualquer ponto. Na figura \ref{fig:muss2} é mostrada essa situação. \cite{mussoi2}
 
 \begin{figure}[H]
     \centering
      \caption{Linhas de campo uniforme e em imã permanente}
      \includegraphics[width=0.8\textwidth]{./img/mussoi10.png}
-     \caption*{Fonte: \cite{mussoi}}
+     \caption*{Fonte: \cite{mussoi2}}
      \label{fig:muss2}
 \end{figure}
 
 
 \section{Campo Magnético gerado no centro de uma Espira Circular}
 Um condutor em forma de espira circular quando percorrido por corrente elétrica é capaz de
-concentrar as linhas de campo magnético no interior da espira, como mostra a figura \ref{fig:campoc}. Isso significa que
+concentrar as linhas de campo magnético no interior da espira, como mostrado na figura \ref{fig:campoc}. Isso significa que
 a densidade de campo magnético resultante no interior da espira é maior que a produzida pela mesma
-corrente no condutor retilíneo. \cite{mussoi} 
+corrente no condutor retilíneo. \cite{mussoi1} 
 
 \begin{figure}[H]
     \centering
@@ -53,7 +49,7 @@ corrente no condutor retilíneo. \cite{mussoi}
       \includegraphics[width=0.33\textwidth]{./img/mussoi2.png}
      }
      \label{fig:campoc}
-     \caption*{Fonte: \cite{mussoi}}
+     \caption*{Fonte: \cite{mussoi1}}
 \end{figure}
 
 \section{Bobina de Helmholtz}
@@ -102,10 +98,10 @@ Para um melhor entendimento do que seria uma bobina de Helmholtz 3D, na figura \
 
 \section{Sensor magnético}
 
-Um sensor magnético é um dispositivo capaz de detectar um campo magnético e transmitir as informações correspondentes. Um sensor magnético é, portanto,um transdutor que converte um campo magnético em informação. Por exemplo, uma agulha de bússola é um sensor magnético.\cite{popovic2003hall}
+Um sensor magnético é um dispositivo capaz de detectar um campo magnético e transmitir as informações correspondentes. Portanto, um sensor magnético é um transdutor que converte um campo magnético em informação.\cite{popovic2003hall}
 
 \section{Conversor de ponte completa (Ponte H)}
-O conversor de ponte completa é um circuito utilizado para converter um sinal CC em um sinal CA, chaveando alternadamente entre as chaves S1 e S2 ou S3 e S4. Essa estrutura é também chamada de ponte H, se não houver chaveamento, pode-se apenas inverter a tensão da carga, assim como é demonstrado nas figuras \ref{fig:ponteh1} e \ref{fig:hart1} . \cite{hart2011power}
+O conversor de ponte completa é um circuito utilizado para converter um sinal CC em um sinal CA, chaveando alternadamente entre chaves (S1 e S2 ou S3 e S4), como é demonstrado na figura \ref{fig:ponteh1}. Essa estrutura é também chamada de ponte H, se não houver chaveamento, pode-se apenas inverter a tensão da carga. \cite{hart2011power}
 
 \begin{figure}[H]
     \centering
@@ -118,14 +114,6 @@ O conversor de ponte completa é um circuito utilizado para converter um sinal C
      }
     % \hfill
      \caption*{Fonte:\cite{hart2011power}}\label{fig:ponteh1}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-     \caption{Estados da carga na ponte H}
-     \includegraphics[width=0.65\textwidth]{./img/hart1.png}
-     \caption*{Fonte: \cite{hart2011power}}
-     \label{fig:hart1}
 \end{figure}
 
 Uma observação importante a comentar-se é que S1 e S4 não devem ser fechados ao mesmo tempo, nem S2 e S3 no caso da figura \ref{fig:ponteh1}. Caso contrário, existiria um curto-circuito através da fonte CC. \cite{hart2011power}
